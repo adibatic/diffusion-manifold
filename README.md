@@ -12,11 +12,15 @@ This project moves beyond discrete regime typologies by modeling state architect
 ![Reference Manifold](figures/fig1_reference_manifold.png)
 *Figure 1: The continuous diffusion manifold colored by HDI and Log GDP, revealing the primary gradients of institutional development.*
 
+![Trajectory Archetypes](figures/fig4_trajectory_typologies.png)
+*Figure 2: Representative developmental archetypes (Direct, Meandering, and Erratic) overlaid on the global manifold, illustrating distinct regimes of institutional evolution.*
+
 ### Key Methodology & Findings
-* **Diffusion Maps:** Capturing non-linear relationships in institutional data (VDEM & WDI) to define a "Reference Manifold."
-* **Topological Data Analysis (TDA):** Using Vietoris-Rips complexes to identify "Developmental Voids"—regions of the institutional state-space that are historically or structurally inaccessible.
-* **Trajectory Typologies:** Classifying country movements (1900–2026) into **Direct**, **Meandering**, and **Erratic** paths based on tortuosity and geodesic efficiency.
-* **Systemic Dispersion:** Measuring how the global "swarm" of nations expands or contracts across the manifold over the last century.
+* **Diffusion Maps:** Capturing non-linear relationships in institutional data (V-Dem & WDI) to define a "Reference Manifold."
+* **Topological Data Analysis (TDA):** Identifying "Developmental Voids" via Vietoris-Rips complexes—regions of the state-space that are historically or structurally inaccessible.
+* **Trajectory Typologies:** Classifying country movements (1990–2026) into Direct, Meandering, and Erratic paths based on Log-Tortuosity and geodesic efficiency.
+* **Standardized Distribution:** Using normalized density estimation to compare the systemic complexity across different developmental regimes.
+* **Systemic Dispersion:** Measuring the expansion and contraction of the global "swarm" of nations across the manifold over time.
 
 ## Repository Structure
 
@@ -58,11 +62,7 @@ This analysis utilizes the **Quality of Government (QoG) Standard Dataset** (Jan
    ```
 
 4. **Run the analysis:**
-   Open `src/analysis.ipynb` using your preferred notebook environment (e.g., VS Code, Cursor, or JupyterLab). Running the cells sequentially will:
-   * Perform KNN imputation for missing values.
-   * Generate the Diffusion Manifold using the RBF kernel.
-   * Conduct Topological Data Analysis (TDA) via the GUDHI library.
-   * Export all figures to the figures/ directory.
+   Open `src/analysis.ipynb` and run the cells sequentially. In addition to generating the global figures, use the analyze_country_trajectory("Country Name") function in the final cells to generate high-resolution phase-space and velocity diagnostics for any specific nation.
 
 ## Writing & Manuscript
 

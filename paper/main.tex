@@ -124,22 +124,6 @@ By calculating the multidimensional density gradient and isolating the bounds of
     \label{fig:barcode}
 \end{figure}
 
-\subsection{Data-Driven Trajectory Typologies}
-Projecting 5,628 historical observations (1990--2026) onto the manifold reveals that linear development is a statistical rarity. Applying unsupervised $K$-Means clustering ($K=3$) to the log-transformed Tortuosity and Geodesic Inefficiency metrics organically identifies three distinct movement paradigms:
-
-\begin{itemize}
-    \item \textbf{Direct ($N=88$):} States with low tortuosity and near-perfect geodesic efficiency, moving purposefully toward a stable attractor. The cluster medoid is the \textbf{Dominican Republic}.
-    \item \textbf{Meandering ($N=67$):} States experiencing gradual, curving transitions through the manifold, adhering to natural geodesic paths but taking longer Euclidean routes. The cluster medoid is \textbf{Mauritania}.
-    \item \textbf{Erratic ($N=15$):} States trapped in highly tortuous limit cycles. These states possess high Euclidean path lengths but immense Geodesic Inefficiency, indicating volatile institutional changes (e.g., repeating cycles of revolution and backsliding) that fight against the natural topology of the system. The cluster medoid is \textbf{Kyrgyzstan}.
-\end{itemize}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.6\textwidth]{../figures/fig3_trajectory_typologies.eps}
-    \caption{\textbf{Governance Trajectory Typologies (1990--2026).} Historical paths illustrating Direct development (Dominican Republic, blue), Meandering transitions (Mauritania, orange), and Erratic regime cycling (Kyrgyzstan, red).}
-    \label{fig:trajectories}
-\end{figure}
-
 \subsection{Qualitative Case Studies of Trajectory Typologies}
 To ground the mathematical abstraction of the diffusion manifold in empirical political history, we examine the three exemplar states identified by our $K$-Means clustering. These states—the Dominican Republic, Mauritania, and Kyrgyzstan—were not selected arbitrarily; they represent the geometric medoids of their respective clusters, minimizing the Euclidean distance to the group centroid in our log-transformed metric space.
 
@@ -159,13 +143,25 @@ Kyrgyzstan represents the "Erratic" typology, the most structurally dangerous cl
 Kyrgyzstan's post-Soviet history is a textbook example of this dynamic. Known as the "Island of Democracy" in Central Asia during the 1990s, the state repeatedly attempted rapid, sweeping democratic overhauls without the underlying structural capacity or anti-corruption consolidation to support them. These attempts to "jump" across the void triggered severe systemic recoils, manifesting as the Tulip Revolution (2005), the April Revolution (2010), and the severe political crises and democratic backsliding of 2020. Each time Kyrgyzstan attempted to construct high-level polyarchy while retaining deep-seated political corruption and developmental vulnerabilities, the state structure fractured. The mathematical consequence is a jagged, highly inefficient trajectory that highlights the limits of imposing advanced institutional architectures onto incompatible socio-economic foundations.
 
 \subsection{Swarm Morphology and Polarization}
-Analysis of systemic dispersion falsifies the post-Cold War convergence hypothesis. Figure 4 illustrates that while the global governance ensemble contracted significantly between 1990 and 1992 \cite{vicsek1995novel}, this convergence rapidly reversed. From the late 1990s through 2013, phase-space dispersion expanded relentlessly. Despite minor contractions during the 2020s, the overall trajectory indicates that the global system is actively polarizing into distant, competing topological basins.
+Analysis of systemic dispersion falsifies the post-Cold War convergence hypothesis. Figure \ref{fig:dispersion} illustrates that while the global governance ensemble contracted significantly between 1990 and 1992, this convergence rapidly reversed.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.8\textwidth]{../figures/fig4_global_dispersion.eps}
-    \caption{\textbf{Phase-Space Dispersion Over Time.} The mean Euclidean distance of all states from the global centroid (1990--2026). The sharp rise in variance post-1992 highlights the polarization of the international system into distinct developmental attractors.}
+    \includegraphics[width=0.7\textwidth]{../figures/fig3_global_dispersion.eps}
+    \caption{\textbf{Phase-Space Dispersion Over Time.} The mean Euclidean distance of all states from the global centroid (1990--2026).}
     \label{fig:dispersion}
+\end{figure}
+
+\subsection{Data-Driven Trajectory Typologies}
+Projecting 5,628 historical observations (1990--2026) onto the manifold reveals that linear development is a statistical rarity. Applying unsupervised $K$-Means clustering ($K=3$) to the log-transformed Tortuosity and Geodesic Inefficiency metrics organically identifies three distinct movement paradigms, visualized in Figure \ref{fig:trajectories}.
+
+The first archetype, \textbf{Direct} ($N=88$), consists of states with low tortuosity and near-perfect geodesic efficiency that move purposefully toward a stable attractor, exemplified by the Dominican Republic. The second, \textbf{Meandering} ($N=67$), describes states like Mauritania that experience gradual, curving transitions; these states adhere to natural geodesic paths but take significantly longer Euclidean routes. Finally, the \textbf{Erratic} typology ($N=15$), represented by Kyrgyzstan, identifies states trapped in highly tortuous limit cycles. These cases exhibit immense Geodesic Inefficiency, indicating volatile institutional changes that repeatedly fight against the natural topology of the system.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.6\textwidth]{../figures/fig4_trajectory_typologies.eps}
+    \caption{\textbf{Governance Trajectory Typologies (1990--2026).} Historical paths illustrating Direct development (Dominican Republic, blue), Meandering transitions (Mauritania, orange), and Erratic regime cycling (Kyrgyzstan, red).}
+    \label{fig:trajectories}
 \end{figure}
 
 \section{Discussion and Conclusion}
