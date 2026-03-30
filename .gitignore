@@ -208,7 +208,7 @@ __marimo__/
 
 
 # ==========================================
-# CUSTOM PROJECT FILES: DATA & LATEX
+# CUSTOM PROJECT FILES: DATA, LATEX & BACKUPS
 # ==========================================
 
 # 1. Data Files (Blocks copyrighted/large datasets)
@@ -216,7 +216,7 @@ data/*.csv
 data/*.dta
 !data/.keep 
 
-# 2. LaTeX Compilation Junk (The "Noise")
+# 2. LaTeX Compilation Junk
 paper/*.aux
 paper/*.log
 paper/*.out
@@ -231,6 +231,11 @@ paper/*.snm
 paper/*.vrb
 paper/*-eps-converted-to.pdf
 
-# 3. The Final Manuscript (The "Artifact")
+# 3. The Final Manuscript
 paper/*.pdf
 paper/main.pdf
+
+# 4. Project Backups
+backups/
+*.bak
+*~

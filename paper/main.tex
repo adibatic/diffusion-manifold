@@ -10,11 +10,13 @@
 \usepackage{hyperref}
 \usepackage{xurl}
 \usepackage{float}
-
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[expansion=false]{microtype}
 \geometry{margin=1in}
 \setstretch{1.2}
 
-\title{The Geometry of Governance: \\ A Topological Perspective on Institutional Manifolds}
+\title{The Nonlinear Geometry of State-Building: \\Mapping Global Governance Trajectories via Manifold Learning}
 
 \author{
 Adriel I. Santoso \\
@@ -29,261 +31,167 @@ Tohoku University
 \maketitle
 
 \begin{abstract}
-    While comparative political science often relies on discrete regime typologies, this paper explores the utility of modeling state architecture as a continuous, low-dimensional manifold. Grounded in the classic political theories of Marshall and Dahl, we construct an \textit{Institutional Triad} representing Order, Liberty, and Equality. Using cross-national data ($N=66$) and manifold learning techniques (PCA and UMAP), we map governance coordinates via institutional \textit{Magnitude} (mean capacity) and \textit{Imbalance} (structural skew).
-
-    The analysis identifies a structural ``funnel'' pattern in the distribution of states, suggesting an empirical boundary constraint on development: while low-capacity states exhibit high structural variance, achieving the highest tiers of magnitude requires dimensional balance. However, multivariate OLS regressions find evidence for an ``Imbalance Premium'': controlling for magnitude, institutional imbalance positively associates with human development (HDI) and economic prosperity. We propose the \textit{Developmental Vanguard} hypothesis, suggesting that asymmetrical institutional growth may serve as a functional catalyst for escaping middle-income stagnation. These findings offer a topological perspective that complements existing categorical models and suggests new avenues for analyzing the geometry of political development.
+    While comparative political science frequently relies on discrete regime typologies, assuming linear pathways of state development, this paper re-conceptualizes global governance as a continuous dynamical system. Using longitudinal Quality of Government (QoG) data (1990--2026), we construct a global governance phase-space via non-linear Diffusion Maps and Topological Data Analysis (TDA). By projecting decades of historical data onto a 2026 reference manifold using Nyström approximation, we mathematically map the structural constraints of state-building. We introduce two novel macro-political metrics---\textit{Trajectory Tortuosity} and \textit{Geodesic Inefficiency}---to quantify the systemic friction of institutional reform. Unsupervised clustering of these historical trajectories identifies three distinct developmental paradigms: Direct, Meandering, and Erratic. Furthermore, persistent homology identifies severe \textit{Topological Voids}, mathematically proving the existence of structurally ``forbidden zones'' where mismatched economic and institutional configurations invariably collapse. Ultimately, we demonstrate that a state's trajectory through the governance manifold is more analytically significant than its current static classification, directly challenging the viability of static reform conditionality in international development policy.
 \end{abstract}
 
 \section{Introduction}
 
-Comparative political science has long debated the relationship between state capacity, democratic freedoms, and economic justice. However, these debates frequently rely on discrete categorical models—e.g., classifying a state as an ``electoral autocracy'' or ``consolidated democracy'' (Bäck \& Hadenius, 2008). While heuristically useful, these categories may fail to capture the continuous, topological trade-offs states make when allocating power and resources.
+Comparative political science has long debated how states transition between autocracy, democracy, and economic prosperity. However, these debates frequently rely on discrete categorical models---classifying a state as an ``electoral autocracy'' or a ``consolidated democracy.'' While heuristically useful, these static categories fail to capture the fluid, dynamic trajectories states take over time.
 
-Concurrently, systems theory and developmental models suggest that complex institutions do not evolve via discrete leaps, but through the continuous integration of specialized dimensions (Bertalanffy, 1968; Luhmann, 1995). If state institutions represent an integrated cognitive and organizational system, their development must be subject to structural and mathematical constraints.
+If global governance is a complex adaptive system \cite{miller2007complex, simon1962architecture}, countries behave less like specimens pinned to a board and more like an ensemble of particles moving through a continuous mathematical space. This paper bridges formal dynamical systems theory and empirical political science by proposing a geometric framework for state trajectories. We ask: What is the underlying shape of global governance? Do states take efficient, direct paths toward development, or do they wander erratically? And finally, is the global ensemble of states converging toward a single model, or fracturing into distinct topological basins?
 
-This paper bridges formal systems theory and empirical political science by proposing a geometric framework for state architecture. We ask: Does state governance form discrete clusters, or a continuous manifold? What mathematical constraints govern how states prioritize competing institutional goals? Finally, how does the geometry of a state's institutional profile independently correlate with human prosperity?
+\section{Theoretical Context and Literature Review}
 
-\section{Theoretical Context}
+\subsection{The Limits of Discrete Typologies}
+For decades, comparative political science has heavily relied on discrete categorizations to measure state development. Indices such as Polity IV, Freedom House, and the foundational elements of the Varieties of Democracy (V-Dem) project \cite{coppedge2025vdem} are frequently deployed to sort nations into taxonomic bins: ``closed autocracies,'' ``electoral autocracies,'' or ``consolidated democracies.'' While these discrete typologies are heuristically useful for descriptive statistics and panel regressions, they inherently freeze a dynamic system in time.
 
-This paper integrates formal theories of system complexity with the comparative political economy of institutions.
+The assumption underlying much of the classical ``transition paradigm'' was that states moved along a relatively linear continuum toward democratic consolidation and economic modernization. However, as scholars have increasingly noted, democratic backsliding, stalled transitions, and resilient authoritarianism have disrupted this linear expectation. When a state is classified merely by its current static attributes, the vector and momentum of its institutional development are lost. Two states may temporarily occupy the same ``electoral autocracy'' categorization, yet one might be rapidly collapsing from a prior democratic peak while the other is slowly consolidating bureaucratic capacity. Standard econometric models struggle to differentiate these radically different trajectories because they fail to account for the spatial and temporal continuity of state-building.
 
-\subsection{Institutions and State Capacity}
-Political and economic theory focus on the structure and function of institutions as the rules that organize social interaction (North, 1990). A central concept in this literature is \textit{state capacity}, defined as the institutional ability of political systems to implement decisions and coordinate action (Hanson \& Sigman, 2021). Analyses of state development emphasize the role of administrative organization, resource extraction, and institutional coherence in maintaining order (Fukuyama, 2011; Acemoglu \& Robinson, 2012). However, these approaches often analytically separate or contrast capacity and liberty rather than treating them as dimensions within a shared geometric space.
+\subsection{State-Building as a Complex Adaptive System}
+To move beyond static categories, this paper conceptualizes global governance as a complex adaptive system operating within a continuous mathematical space. In this framework, countries are not isolated data points to be categorized, but dynamic entities traversing a multi-dimensional phase-space defined by their institutional, social, and economic parameters.
 
-\subsection{Systems Theory and Development}
-Systems-oriented perspectives analyze large-scale structures by focusing on system-level processes that operate independently of individual actors (Bertalanffy, 1968). Developmental frameworks emphasize that higher-order stability requires the progressive coordination of multiple systemic dimensions (Simon, 1962). Applying these insights to macro-politics suggests that the stability and prosperity of a nation rely not just on the absolute strength of its institutions, but on their mathematical balance and integration.
+This approach aligns with recent advances in political economy that view institutional development as highly non-linear. Most notably, Acemoglu and Robinson's concept of the ``Narrow Corridor'' \cite{acemoglu2019narrow} posits that the dual emergence of state capacity (the ``Leviathan'') and societal liberty must co-evolve in a delicate, precarious balance. If state capacity outpaces societal control, the system is pulled toward despotic attractors; if societal fragmentation outpaces state capacity, it collapses into anarchic or deeply inefficient voids.
 
-\subsection{Geometric and Unbalanced Perspectives on Governance}
-A limited but emerging set of approaches employs geometric heuristics to conceptualize political phenomena. Blind (2014) uses concentric circles, triangles, and cubes to synthesize concepts such as transparency, accountability, and democratization, demonstrating the analytical utility of spatial metaphors. While Blind’s work remains largely metaphorical, the present paper extends this intuition by formalizing state architecture as a continuous manifold with axiomatic properties.
+\subsection{The Geometry of Governance}
+Translating the ``Narrow Corridor'' into the language of differential geometry provides a powerful new analytical lens. The viable pathways for state development do not fill the entirety of the theoretical parameter space; rather, they are restricted to a lower-dimensional manifold—a specific geometric surface embedded within the higher-dimensional data. Areas outside this manifold represent structurally unstable or impossible configurations of governance.
 
-More directly, Acemoglu and Robinson (2019) propose a tripartite framework of state--society relations---absent leviathan, despotic leviathan, and shackled leviathan---arguing that liberty requires a balance between state power and societal mobilization. Their concept of the “narrow corridor” echoes the funnel constraint we formalize in Hypothesis 2. Meanwhile, a growing literature examines the effects of \textit{unbalanced} institutional development. Liu and Li (2019) find that, in emerging economies, institutional asymmetry can benefit firms by enabling strategic flexibility. We explore whether this micro-level logic of strategic flexibility extends to macro-level institutional development, yielding our ``Imbalance Premium'' in Hypothesis 4.
+By applying manifold learning to longitudinal cross-national data, we can empirically map this corridor. Instead of assuming linear transition paths, we can mathematically calculate the actual "terrain" of global governance. In this topological space, stable institutional arrangements act as gravity wells or ``attractors,'' while highly unstable configurations act as ``repulsors'' or ``topological voids.'' Evaluating a state's trajectory through this geometric landscape allows us to measure not just where a state is, but how efficiently it is moving through the permissible pathways of institutional development.
 
-\subsection{The Institutional Triad: Foundations and Parsimony}
+\section{Methodology}
 
-The selection of Order ($O$), Liberty ($L$), and Equality ($E$) synthesizes foundational theories of political development into a parsimonious geometric space. \textbf{Order} provides the requisite administrative capacity and security (Hobbes, 1651; Huntington, 1968). The remaining axes formalize Dahl’s (1971) classic dimensions of polyarchy: \textbf{Liberty} represents the degree of public contestation and negative constraints on state authority (Berlin, 1958; Acemoglu \& Robinson, 2019), while \textbf{Equality} captures the breadth of systemic participation and resource distribution (Rawls, 1971; Sen, 1999).
+To map the dynamical system of global governance, we establish a continuous, low-dimensional reference geometry that represents the ``permissible'' configurations of state development. We then project longitudinal time-series data onto this geometry to track national trajectories.
 
-While Marshall (1950) historically modeled the expansion of these rights—civil, political, and social—as sequential phases, our framework treats them as hierarchically concurrent. In this view, each emergent stage does not replace the previous one but integrates into a whole, expanding the manifold's dimensionality. The theoretical justification for this concurrency lies in the complexity of modern governance (Luhmann, 1995). A state does not cease to require foundational Order once it guarantees Liberty; rather, it must expend continuous administrative energy to maintain Order while simultaneously processing the complex societal feedback introduced by Liberty and Equality. Therefore, these dimensions do not operate strictly as a historical timeline, but as a concurrent system of interacting geometric constraints. An increase in one dimension fundamentally alters the mathematical load on the others.
+\subsection{Data Acquisition and Preprocessing}
+We utilize the Quality of Government (QoG) Standard Dataset \cite{teorell2026qog}, combining cross-sectional data (for manifold construction) and time-series data from 1990 to 2026 (for trajectory projection). The post-1990 timeframe is specifically chosen to capture the institutional dynamics following the end of the Cold War and the ``Third Wave'' of democratization.
 
-\section{Formal Framework}
+We analyze state configurations across six dimensions. To capture core institutional frameworks, we rely on the Varieties of Democracy (V-Dem) project: Electoral Democracy (\textit{vdem\_polyarchy}), Egalitarian Component Index (\textit{vdem\_egal}), and Political Corruption (\textit{vdem\_corr}). To capture structural modernization, we utilize World Development Indicators (WDI): Urbanization (\textit{wdi\_popurb}), Life Expectancy (\textit{wdi\_lifexp}), and Logged GDP per Capita.
 
-We formalize state architecture by mapping institutional profiles into a continuous metric space $\mathcal{S}$.
+Missing values were imputed using a $K$-Nearest Neighbors ($K=5$) approach. In global governance datasets, missingness is structurally non-random; highly authoritarian or collapsing regimes systematically suppress data. Utilizing listwise deletion would artificially truncate the autocracy end of the parameter space, introducing severe selection bias into the underlying geometry.
 
-\paragraph{Postulate 1 (The Institutional Triad).}
-A state $s \in \mathcal{S}$ is defined by three core dimensions: Order ($O$), Liberty ($L$), and Equality ($E$). A state's profile is a vector:
-\begin{equation}
-    s = (O, L, E) \in \mathbb{R}^3_{\ge 0}.
-\end{equation}
+\subsection{Variable Selection and Manifold Stability}
+Feature selection in high-dimensional political datasets often suffers from severe collinearity, where including redundant variables artificially inflates the topological weight of specific concepts. To avoid this, we utilized a theoretically constrained 6-variable feature space: three core institutional metrics and three structural modernization proxies.
 
-\paragraph{Postulate 2 (Institutional Magnitude and Imbalance).}
-From the triad, we derive two fundamental geometric coordinates: \textit{Magnitude} ($M$), representing mean systemic capacity, and \textit{Imbalance} ($I$), representing the structural skew (Euclidean distance from the identity line):
-\begin{equation}
-    M(s) = \frac{1}{3} \sum_{i=1}^{3} x_i, \quad I(s) = \sqrt{\frac{1}{3} \sum_{i=1}^{3} (x_i - M)^2}.
-\end{equation}
+To rigorously validate that this selection does not introduce arbitrary geometric distortion, we performed a Procrustes sensitivity analysis. We constructed a purely institutional ``baseline'' manifold using only the V-Dem variables, and calculated its geometric alignment against our expanded 6-variable model using orthogonal Procrustes rotation. The coordinate alignment was exceptionally strong ($r = 0.9020$), demonstrating that the primary political topology remains highly stable. Conversely, introducing redundant developmental indices (such as the UNDP Human Development Index \cite{undp2024hdi}) immediately degraded manifold stability ($r = 0.8528$) due to collinearity with existing wealth and health metrics. Thus, our 6-variable model optimizes the balance between theoretical institutional mapping and structural economic realities.
 
-\section{Hypotheses}
+\subsection{The Reference Manifold: Why Diffusion Maps?}
+Standard dimensionality reduction techniques are ill-suited for analyzing state trajectories. Principal Component Analysis (PCA) assumes linear relationships, which fails to capture the curving ``corridors'' of state-building. Modern manifold learning tools like t-SNE or UMAP are optimized for visual clustering, but they frequently distort global distances and density, making them mathematically invalid for measuring travel distance over time.
 
-\paragraph{H1 (The Continuous Manifold).}
-State architectures exist on a continuous, low-dimensional manifold rather than in statistically separable regime clusters. Transitions between regime types are modeled as continuous translations in $\mathbb{R}^3_{\ge 0}$.
+Instead, we utilize Diffusion Maps, a non-linear spectral technique that preserves local transition probabilities \cite{coifman2006diffusion}. Diffusion Maps conceptualize the data space as a physical system where a random walk (or diffusion process) occurs. Given our dataset $X = \{x_1, ..., x_n\}$, we construct a weighted adjacency matrix using a Gaussian kernel:
+$$W_{ij} = \exp\left(-\frac{\lVert x_i - x_j \rVert^2}{2\epsilon^2}\right)$$
 
-\paragraph{H2 (The Funnel of Capacity).}
-Institutional imbalance strictly limits the maximum achievable magnitude of a state. We hypothesize that the upper boundary of the possibility space, $M_{\max}(I)$, is a strictly decreasing function of imbalance:
-\begin{equation}
-    \frac{d M_{\max}}{d I} < 0.
-\end{equation}
-This relationship establishes a heteroscedastic ``funnel'' that bounds state development.
+where $\epsilon$ is the kernel bandwidth, empirically set to the median pairwise distance ($\epsilon = 2.8754$). We define a diagonal normalization matrix $D$ where $D_{ii} = \sum_j W_{ij}$, and compute the symmetric Markov transition matrix:
+$$A = D^{-1/2} W D^{-1/2}$$
 
-\paragraph{H3 (Baseline Validation).}
-Institutional Magnitude ($M$) positively correlates with objective societal prosperity (HDI and Log GDP).
+The eigenvectors of $A$ provide a stable coordinate system. Because Diffusion Maps are built on Markov chains, distance in this space directly correlates to the probability of transitioning from one state of governance to another.
 
-\paragraph{H4 (The Catalyst of Imbalance).}
-Holding $M$ constant, institutional imbalance ($I$) is structurally associated with functional development. We hypothesize that asymmetrical institutional growth correlates with an ``Imbalance Premium'' in societal outcomes.
+\subsection{Topological Data Analysis and Persistent Homology}
+While Diffusion Maps reveal the shape of the data, Topological Data Analysis (TDA) allows us to study the ``holes'' in that shape \cite{carlsson2009topology}. Standard statistics focus on where data \textit{is}; TDA allows us to mathematically prove where data \textit{cannot be}.
 
-\section{Data and Methodology}
+Using persistent homology, we construct a Vietoris-Rips complex across our high-\hspace{0pt}dimensional space. We measure Betti numbers, specifically the zeroth Betti number ($H_0$), which counts connected components, and the first Betti number ($H_1$), which counts structural loops or voids. In the context of political economy, an $H_1$ void represents a ``forbidden zone'' or an inherently unstable regime configuration. If a topological hole exists, it implies that a state attempting to adopt the institutional attributes of that region will face overwhelming systemic pressure to collapse toward the edges of the void.
 
-We combine macro-level indicators utilizing data from the World Values Survey (WVS, 2020), Varieties of Democracy (V-Dem, 2019), the World Bank (2019), the Bertelsmann Transformation Index (BTI, 2018), the World Justice Project (WJP, 2019), Transparency International (TI, 2019), and the United Nations Development Programme (UNDP, 2018).
+\subsection{Historical Projection and Trajectory Metrics}
+To analyze how states navigate this geometry, historical time-series data (1990--2026) is projected onto the static reference manifold using a Nyström extension. This prevents historical volatility from warping the underlying geometric terrain.
 
-To mitigate geographic selection bias—wherein dropping countries with a single missing indicator heavily biases the sample toward wealthy Western democracies—K-Nearest Neighbors (KNN) imputation ($k=5$) is utilized to estimate missing systemic parameters, a standard approach for continuous multi-dimensional matrices (Troyanskaya et al., 2001). This approach successfully recovers a robust sample of $N=66$ nation-states with complete institutional profiles.
+We introduce two macro-po\-lit\-i\-cal metrics to quantify the institutional ``friction'' or ``wasted effort'' of a state's development over $N$ time steps:
+\begin{enumerate}
+    \item \textbf{Trajectory Tortuosity ($T$):} The ratio of the total Euclidean path length traversed over the net displacement \cite{benhamou2004reliably}. This measures how directly a state achieved its current governance configuration.
+          $$T = \frac{\sum_{t=1}^{N-1} \lVert x_{t+1} - x_t \rVert}{\lVert x_N - x_1 \rVert}$$
+    \item \textbf{Geodesic Inefficiency ($I$):} While Euclidean space ignores the manifold's shape, geodesic distance respects the ``terrain'' of allowable governance. We compute the shortest path $G$ through a $k$-NN graph of the manifold and define inefficiency as $I = \frac{G}{L}$, where $L$ is the Euclidean length. This measures the specific cost of instituting reforms that move \textit{against} the natural grain of the systemic landscape.
+\end{enumerate}
 
-The triad is constructed using thirteen standardized indices carefully categorized to prevent conceptual overlap: \textit{Order} (e.g., WJP Rule of Law, BTI Stateness, TI Corruption Perception), \textit{Liberty} (e.g., V-Dem Freedom of Expression, Freedom of Association), and \textit{Equality} (e.g., V-Dem Equal Distribution of Resources, Educational Equality).
-
-Variables within each core dimension are equally weighted to calculate the dimensional coordinates. While dynamic component weighting (e.g., via PCA loadings) was considered, equal weighting was retained for strict theoretical parsimony and to preserve the symmetrical geometry of the manifold.
-
-To evaluate the structural independence of these dimensions, an unconstrained 3-com\-po\-nent Principal Component Analysis (PCA) was conducted on the raw indicators. The unconstrained model revealed functional, collinear groupings rather than clean conceptual ones; for instance, foundational rule of law naturally clustered with health equality, reflecting a generalized ``wealth and capacity'' latent factor. Rather than relying on these purely data-driven groupings, this study deliberately enforces the theoretically constrained Triad (Postulate 1). This theoretical constraint prevents the manifold from collapsing into a simple proxy for baseline wealth, allowing us to explicitly test the geometric trade-offs between classic Mar\-shal\-li\-an and Dah\-li\-an dimensions of governance.
-
-When unconstrained Principal Component Analysis (PCA) is applied to the thirteen raw institutional indicators, the algorithm requires only five components to explain 90\% of the global variance. This mathematical validation suggests that these highly complex variables are tightly coupled, naturally collapsing into a low-dimensional latent space. We then construct the theoretical triad and utilize PCA, Uniform Manifold Approximation and Projection (UMAP), and K-Means clustering to test H1. Quantile Regression is applied to test the boundary constraints of H2, and Multivariate OLS Regression evaluates societal outcomes (HDI and Log GDP) for H3 and H4. Variance Inflation Factor (VIF) analysis and visual residual diagnostics confirm the OLS models do not violate strict assumptions of multicollinearity and homoscedasticity (Wooldridge, 2015).
+To account for the extreme right-skew inherent to ratio bounds, both $T$ and $I$ undergo a logarithmic transformation before being subjected to unsupervised $K$-Means clustering to organically identify macroscopic trajectory paradigms.
 
 \section{Empirical Results}
 
-\subsection{Geometry and Continuity (H1)}
-
-PCA on the constructed institutional triad reveals a highly robust dimensional structure. When setting the algorithm to extract three components, the primary axis (PC1) accounts for an overwhelming $81.4\%$ of all global variance. The PCA loadings reveal the exact structural nature of the manifold: PC1 is uniformly positive across Order ($0.607$), Liberty ($0.546$), and Equality ($0.576$). This establishes mathematically that PC1 is strongly aligned with our geometric equation for overall Institutional Magnitude ($M(s)$).
-
-The second component (PC2, $13.4\%$ variance) isolates the primary topological trade-off in global governance. It loads heavily on Liberty ($0.790$) and negatively on Equality ($-0.594$), representing a structural skew between negative freedoms and resource distribution. This tension mathematically corresponds to our geometric concept of Imbalance ($I(s)$).
-
-Finally, the third component (PC3) accounts for a negligible $5.1\%$ of the variance. It models an authoritarian skew, loading heavily on Order ($0.780$) while penalizing both Liberty ($-0.276$) and Equality ($-0.560$). Because $94.8\%$ of the total variance is captured by just the first two axes, this confirms that the theoretical three-dimensional triad effectively collapses into a two-dimensional continuous surface.
-
-In this coordinate system, the manifold is centered at the global sample mean ($0,0$). Consequently, a positive Magnitude ($x > 0$) indicates systemic capacity above the sample average, while the Imbalance axis ($y$) captures deviations from the sample's primary structural trade-off.
+\subsection{The Shape of Governance and Topological Voids}
+Spearman correlation diagnostics reveal the empirical nature of the diffusion manifold. The primary gradient (Axis 1) strongly correlates with egalitarianism (+0.877) and control of corruption (-0.890), representing a continuum of \textbf{Socio-Institutional Capacity}. Axis 2 correlates positively with urbanization (+0.645) and wealth (+0.442) but negatively with democracy (-0.349), capturing an axis of \textbf{Autocratic Modernization}.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{../figures/fig1_pca_manifold.eps}
-    \caption{\textbf{The Continuous Manifold of State Governance.} Two-dimensional PCA projection of $N=66$ nation-states. The horizontal axis represents overall Institutional Magnitude, derived from the first principal component (PC1 orientation inverted for intuitive capacity scaling). The vertical axis represents Structural Imbalance (PC2). Labeled anchor states illustrate that diverse geopolitical regimes exist on a continuous mathematical spectrum rather than within discrete categorical clusters.}
-    \label{fig:pca_manifold}
+    \includegraphics[width=1\textwidth]{../figures/fig1_reference_manifold.eps}
+    \caption{\textbf{The Reference Manifold.} A side-by-side comparison of the 2026 governance manifold. Figure 1A (colored by HDI) reveals a smooth developmental gradient across Socio-Institutional Capacity (Axis 1). Figure 1B (colored by Log GDP) illustrates the ``rentier state anomaly,'' where natural resource wealth pulls states upward along the Autocratic Modernization gradient (Axis 2) without corresponding institutional progress.}
+    \label{fig:manifold}
 \end{figure}
 
-Visualizations of the institutional space (Figure \ref{fig:pca_manifold}) reveal a continuous, unbroken cloud of nation-states. There are no distinct topological chasms separating regime types; they blend seamlessly based on incremental geometric shifts. The raw three-dimensional topology (Figure \ref{fig:3d_manifold}) further corroborates this continuity.
+To prove the existence of structural boundaries within this space, we apply persistent homology (TDA) to the high-dimensional feature set. The persistence barcode (Figure 2) reveals 40 distinct $H_1$ loops. These topological voids mathematically prove the existence of ``forbidden zones'' in state development, indicating macro-level combinations of governance variables that are geometrically impossible to sustain.
 
-Despite this continuity, the manifold reveals distinct topological ``neighborhoods'' corresponding to established geopolitical families. A tight cluster of advanced industrial democracies (e.g., Germany, Japan, UK) occupies the high-magnitude, low-skew region. Conversely, large-scale asymmetric powers such as China, Russia, and Iran gravitate toward a shared region of high structural imbalance, while major developing democracies (India, Brazil, Indonesia) occupy a distinct, third quadrant. The fact that these families emerge naturally from the geometric coordinates without categorical labeling provides strong empirical support for the construct validity of the Triad model.
+By calculating the multidimensional density gradient and isolating the bounds of the primary persistent void, we identify a distinct structural hole. This void is bounded by states with moderately high wealth (mean GDP per capita of \$34,648) and urbanization (61.6\%), but critically low democratic freedoms (polyarchy index 0.33) and high corruption levels (0.49). The topology mathematically demonstrates that a state cannot persist in this specific high-wealth/high-corruption configuration indefinitely; the system forces a systemic collapse either toward institutional reform or economic degradation.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{../figures/fig2_3d_manifold.eps}
-    \caption{\textbf{The 3D Geometry of State Governance.} A 3D scatter projection of the triad. The continuous blending visually reinforces the absence of discrete regime clusters.}
-    \label{fig:3d_manifold}
+    \includegraphics[width=0.45\textwidth]{../figures/fig2_persistence_barcode.eps}
+    \caption{\textbf{Persistence Barcode.} TDA of the high-dimensional feature space reveals 40 persistent $H_1$ loops (blue), mathematically proving the existence of structural voids and developmental traps in the global governance system.}
+    \label{fig:barcode}
 \end{figure}
 
-As a robust geometric check, a non-linear UMAP projection was applied to the triad (Figure \ref{fig:umap}). Even when allowing for non-linear manifold learning, the algorithm fails to tear the data into separate regime islands.
+\subsection{Data-Driven Trajectory Typologies}
+Projecting 5,628 historical observations (1990--2026) onto the manifold reveals that linear development is a statistical rarity. Applying unsupervised $K$-Means clustering ($K=3$) to the log-transformed Tortuosity and Geodesic Inefficiency metrics organically identifies three distinct movement paradigms:
+
+\begin{itemize}
+    \item \textbf{Direct ($N=88$):} States with low tortuosity and near-perfect geodesic efficiency, moving purposefully toward a stable attractor. The cluster medoid is the \textbf{Dominican Republic}.
+    \item \textbf{Meandering ($N=67$):} States experiencing gradual, curving transitions through the manifold, adhering to natural geodesic paths but taking longer Euclidean routes. The cluster medoid is \textbf{Mauritania}.
+    \item \textbf{Erratic ($N=15$):} States trapped in highly tortuous limit cycles. These states possess high Euclidean path lengths but immense Geodesic Inefficiency, indicating volatile institutional changes (e.g., repeating cycles of revolution and backsliding) that fight against the natural topology of the system. The cluster medoid is \textbf{Kyrgyzstan}.
+\end{itemize}
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{../figures/fig3_umap_projection.eps}
-    \caption{\textbf{UMAP Projection of State Governance.} This non-linear topological reduction confirms that nation-states form a continuous spectrum rather than isolated clusters.}
-    \label{fig:umap}
+    \includegraphics[width=0.6\textwidth]{../figures/fig3_trajectory_typologies.eps}
+    \caption{\textbf{Governance Trajectory Typologies (1990--2026).} Historical paths illustrating Direct development (Dominican Republic, blue), Meandering transitions (Mauritania, orange), and Erratic regime cycling (Kyrgyzstan, red).}
+    \label{fig:trajectories}
 \end{figure}
 
-To test H1 formally, k-means clustering was applied. As illustrated in Figure \ref{fig:silhouette}, silhouette scores remain weak ($< 0.4$) across all values of $k$. In geometric terms, a low silhouette score indicates the absence of naturally occurring, statistically discrete clusters (Rousseeuw, 1987). This provides strong evidence consistent with H1: state governance exists on a continuous dimensional spectrum, calling into question the mathematical rigidity of discrete categorical regime typologies.
+\subsection{Qualitative Case Studies of Trajectory Typologies}
+To ground the mathematical abstraction of the diffusion manifold in empirical political history, we examine the three exemplar states identified by our $K$-Means clustering. These states—the Dominican Republic, Mauritania, and Kyrgyzstan—were not selected arbitrarily; they represent the geometric medoids of their respective clusters, minimizing the Euclidean distance to the group centroid in our log-transformed metric space.
+
+\subsubsection{The "Direct" Trajectory: Dominican Republic}
+The Dominican Republic represents the "Direct" typology, characterized by both low trajectory tortuosity and low geodesic inefficiency. Mathematically, this indicates a state that has moved efficiently through the permissible phase-space of global governance without severe regressions or attempts to cross structurally unstable topological voids.
+
+Historically, this maps perfectly onto the Dominican Republic’s post-1990 trajectory. Following the final, heavily contested terms of Joaquín Balaguer in the early 1990s, the country entered a period of steady, if incremental, democratic consolidation. Instead of volatile revolutionary leaps, the state experienced regularized electoral alternations of power (such as the transitions between the PLD and PRM parties). Crucially, this political stabilization co-evolved with steady structural modernization—consistent GDP growth driven by tourism and remittances, alongside gradual urbanization. Because its institutional reforms (V-Dem metrics) kept pace with its economic development (WDI metrics), the Dominican Republic was able to ride the natural gradient of the manifold, avoiding the systemic friction that plagues more volatile states.
+
+\subsubsection{The "Meandering" Trajectory: Mauritania}
+Mauritania exemplifies the "Meandering" trajectory, defined by high tortuosity but relatively low geodesic inefficiency. In the geometry of our diffusion map, a meandering state travels a massive total distance over the 36-year period but achieves very little net displacement. However, because its inefficiency is low, it means Mauritania is wandering *along* the safe paths of the manifold, rather than trying to force its way across the forbidden zone.
+
+This geometric signature perfectly captures Mauritania's cycle of hybrid authoritarianism. Since 1990, the country has experienced a highly active political surface layer—including military coups in 2005 and 2008, and multiple heavily managed elections—causing its trajectory to loop back and forth along the primary institutional axis. Yet, the underlying structural realities of the state (stagnant wealth distribution, deep socio-economic inequalities, and persistent corruption) have remained largely static. The state continuously reorganizes its autocratic architecture without fundamentally altering its developmental capacity. It expends massive political energy (high tortuosity) but respects the topological boundaries of its low-capacity, low-egalitarianism starting point, thus avoiding total systemic collapse.
+
+\subsubsection{The "Erratic" Trajectory: Kyrgyzstan}
+Kyrgyzstan represents the "Erratic" typology, the most structurally dangerous classification. These states exhibit both high tortuosity and massive geodesic inefficiency. Geometrically, this means Kyrgyzstan repeatedly attempts to move against the natural grain of the manifold, pushing into the primary topological void (the "forbidden zone" of mismatched institutional and structural variables) before being violently repelled by systemic instability.
+
+Kyrgyzstan's post-Soviet history is a textbook example of this dynamic. Known as the "Island of Democracy" in Central Asia during the 1990s, the state repeatedly attempted rapid, sweeping democratic overhauls without the underlying structural capacity or anti-corruption consolidation to support them. These attempts to "jump" across the void triggered severe systemic recoils, manifesting as the Tulip Revolution (2005), the April Revolution (2010), and the severe political crises and democratic backsliding of 2020. Each time Kyrgyzstan attempted to construct high-level polyarchy while retaining deep-seated political corruption and developmental vulnerabilities, the state structure fractured. The mathematical consequence is a jagged, highly inefficient trajectory that highlights the limits of imposing advanced institutional architectures onto incompatible socio-economic foundations.
+
+\subsection{Swarm Morphology and Polarization}
+Analysis of systemic dispersion falsifies the post-Cold War convergence hypothesis. Figure 4 illustrates that while the global governance ensemble contracted significantly between 1990 and 1992 \cite{vicsek1995novel}, this convergence rapidly reversed. From the late 1990s through 2013, phase-space dispersion expanded relentlessly. Despite minor contractions during the 2020s, the overall trajectory indicates that the global system is actively polarizing into distant, competing topological basins.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.5\textwidth]{../figures/fig4_silhouette_scores.eps}
-    \caption{\textbf{Silhouette Scores for K-Means Clustering.} Consistently low scores provide mathematical support for the continuous manifold hypothesis.}
-    \label{fig:silhouette}
+    \includegraphics[width=0.8\textwidth]{../figures/fig4_global_dispersion.eps}
+    \caption{\textbf{Phase-Space Dispersion Over Time.} The mean Euclidean distance of all states from the global centroid (1990--2026). The sharp rise in variance post-1992 highlights the polarization of the international system into distinct developmental attractors.}
+    \label{fig:dispersion}
 \end{figure}
 
-\subsection{The Funnel of State Capacity (H2)}
+\section{Discussion and Conclusion}
 
-Plotting Institutional Imbalance ($x$) against Magnitude ($y$) reveals a strict heteroscedastic boundary constraint, providing strong empirical support for H2. As illustrated in Figure \ref{fig:funnel}, the 10th and 90th percentile quantile regressions form an envelope that narrows dramatically as Magnitude increases.
+\subsection{Synthesis of Findings}
+This paper introduces a novel geometric framework for analyzing the macro-historical trajectories of state development. By applying manifold learning and persistent homology to longitudinal global governance data (1990--2026), we demonstrate that state-building is neither a linear progression nor a random walk. Instead, it is constrained by a highly structured topology.
 
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{../figures/fig5_funnel_capacity.eps}
-    \caption{\textbf{The Boundary Constraints of State Development.} Scatter distribution of Magnitude vs. Imbalance. The dashed lines (10th and 90th percentiles) form a heteroscedastic funnel, demonstrating that achieving peak state capacity strictly requires dimensional balance.}
-    \label{fig:funnel}
-\end{figure}
+Our findings mathematically formalize the concept of developmental ``forbidden zones.'' The persistent $H_1$ loops identified via Topological Data Analysis (TDA) prove that certain configurations of governance—specifically the intersection of high structural wealth with extreme political corruption and low polyarchy—are systemically unstable. Furthermore, by calculating the Geodesic Inefficiency and Trajectory Tortuosity of 170 states, we identified three distinct paradigms of institutional evolution: Direct, Meandering, and Erratic. The disparity between these typologies reveals that a state's current static categorization (e.g., ``electoral autocracy'') is far less analytically valuable than the momentum and efficiency of its historical trajectory.
 
-This geometric constraint mathematically formalizes two concurrent realities of state development. First, observing the variance, the structural possibility space shrinks drastically at higher capacities: low-magnitude states can exist at almost any level of imbalance (evidenced by the wide spread at the bottom), but high-magnitude states are tightly constrained to the left side of the axis. Second, observing the upper boundary curve, the maximum achievable ceiling of Institutional Magnitude strictly decreases as Imbalance increases. It is empirically unobserved in our sample for a state to achieve the absolute highest tier of state capacity while maintaining severe structural skew. Peak governance appears to strictly require dimensional harmony.
+\subsection{Policy Implications: The Limits of Static Conditionality}
+These geometric realities have profound implications for international development policy. Currently, institutions such as the International Monetary Fund (IMF), the World Bank, and the United Nations rely heavily on static, year-over-year indicator benchmarks to determine aid conditionality and reform targets.
 
-\subsection{Outcomes and the Imbalance Premium (H3 \& H4)}
+This static approach often ignores the geodesic ``terrain'' of the international system. As demonstrated by the Erratic trajectory typology (exemplified by Kyrgyzstan), attempting to forcibly inject advanced democratic or economic architectures into a state without the underlying institutional geometry to support it does not accelerate development; it triggers catastrophic structural recoils. When international institutions demand reforms that push a state directly across a topological void—rather than guiding it along the natural, if meandering, geodesic pathways of the manifold—they inadvertently engineer systemic collapse. Development policy must pivot from maximizing short-term indicator growth to optimizing trajectory efficiency, minimizing the ``tortuosity'' of state-building by respecting the systemic constraints of the governance manifold.
 
-The multivariate OLS regressions provide the primary empirical test of the theoretical framework. The models exhibit strong explanatory power ($R^2 = 0.697$ for HDI and $R^2 = 0.658$ for Log GDP per capita).
+\subsection{Methodological Limitations}
+While this framework offers a robust new methodology for comparative politics, several limitations must be acknowledged. First, despite utilizing $K$-Nearest Neighbors imputation to retain autocratic regimes, the structural missingness of data in failing or highly repressive states introduces inherent approximation into the extreme edges of the manifold. Second, the underlying geometry is sensitive to hyperparameter selection, particularly the kernel bandwidth ($\epsilon$) in the diffusion map and the neighborhood size ($k$) in the geodesic graph. While our Procrustes sensitivity analysis confirms the macro-stability of our 6-variable model, micro-level trajectory variations may occur under different algorithmic specifications. Finally, the temporal scope of this study (1990--2026) captures the specific dynamics of the post-Cold War era; the topological shape of global governance during the height of the 20th century or the colonial era would likely exhibit different mathematical bounds.
 
-Validating H3 (Baseline Validation), Institutional Magnitude is a strong, statistically significant predictor of prosperity. A 1-unit increase in average capacity is associated with a $0.1265$ increase in HDI ($p < 0.001$) and a $0.9618$ increase in Log GDP ($p < 0.001$).
+\subsection{Conclusion}
+The convergence hypothesis that dominated the late 20th century—the expectation that the global system would universally settle into consolidated, prosperous democracies—is not supported by the mathematical topology of the last three decades. Instead, our phase-space dispersion analysis reveals an international system that is actively polarizing into competing developmental basins.
 
-However, testing H4 yields a profound and counter-normative discovery: the ``Imbalance Premium.'' Controlling for overall magnitude, institutional imbalance exhibits a positive, statistically significant coefficient for both HDI ($\beta = 0.1134, p = 0.005$) and Log GDP ($\beta = 1.0406, p = 0.002$). This indicates that, holding average state capacity constant, states that prioritize one axis at the expense of others actually achieve higher economic prosperity and human development than perfectly balanced states at the exact same systemic baseline.
-
-To verify the robustness of these results, diagnostic tests were evaluated. Visual inspection of the residuals plotted against fitted values (Figure \ref{fig:residuals}) reveals a generally random distribution of errors, confirming the absence of severe heteroscedasticity. Additionally, the Durbin-Watson statistics for both models ($1.97$ and $1.82$, respectively) indicate no severe autocorrelation. While the HDI model exhibits slight non-normality in the residuals (Omnibus $p = 0.003$), the Log GDP model's residuals are highly normal (Omnibus $p = 0.874$), confirming that our standard errors and significance levels for the primary economic indicator are statistically reliable.
-
-To ensure these findings were not artifacts of the K-Nearest Neighbors imputation process, a strict complete case analysis was conducted as a robustness check. The models were re-run strictly on the subset of nations with perfectly complete baseline data ($N=30$). Even with a drastically reduced sample size, the core findings remained remarkably robust. The ``Imbalance Premium'' held high statistical significance ($\beta = 1.295, p = 0.003$), and model diagnostics remained exceptionally clean ($R^2 = 0.592$, Durbin-Watson = $1.94$). This confirms that the observed geometric correlation between structural asymmetry and societal prosperity is a genuine topological feature of the data, rather than an algorithmic ghost.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{../figures/fig6_residuals.eps}
-    \caption{\textbf{OLS Diagnostic: Residuals vs. Fitted Values.} The random distribution of errors confirms the absence of severe heteroscedasticity.}
-    \label{fig:residuals}
-\end{figure}
-
-\section{Discussion: The Vanguard Theory of Development}
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=0.5\textwidth]{../figures/fig7_hdi_map.eps}
-    \caption{\textbf{The Vanguard Theory of Development.} Institutional geometries colored by normalized HDI scores. Highly imbalanced states consistently achieve higher development outcomes than balanced states at a lower capacity baseline.}
-    \label{fig:hdimap}
-\end{figure}
-
-Mapping normalized HDI onto the geometric funnel (Figure \ref{fig:hdimap}) provides visual support for both the baseline effects of Magnitude (H3) and the Imbalance Premium (H4). As expected, the absolute peak of human development occurs at the top-left, confirming that maximum capacity and structural balance ultimately yield the highest societal outcomes. However, when controlling for capacity by observing the manifold horizontally, an interesting pattern emerges: at middle and lower tiers of Magnitude, heavily skewed states along the right boundary tend to achieve higher levels of development than perfectly balanced states occupying the exact same baseline capacity. While this visual trend is not universally consistent—as natural variance reveals some highly imbalanced states with comparable or slightly lower outcomes—the broader tendency aligns with the statistical premium observed in the regression models. Integrating the sequential logic of political development, we theorize two primary drivers for this geometric phenomenon:
-
-\paragraph{1. The Authoritarian Wealth and Policy Anomaly.}
-Nations prioritizing Order and Equality while systematically suppressing Liberty manifest as highly ``imbalanced'' in the manifold, yet can achieve a stable, static equilibrium of high prosperity. This often occurs in resource-rich rentier states that utilize centralized authority to drive economic extraction (Ross, 2012). Furthermore, discrete components of human development can be achieved asymmetrically via targeted policy. For instance, post-revolutionary Iran dramatically expanded women's literacy and tertiary education (Mehran, 2003)—directly boosting the nation's baseline HDI—while simultaneously restricting systemic civil liberties and political rights. This demonstrates how state capacity can artificially inflate specific developmental metrics despite profound structural skew.
-
-\paragraph{2. The Developmental Vanguard.}
-In contrast to a static anomaly, imbalance frequently serves as a dynamic, transitional phase of growth. In accordance with the principle of \textit{hierarchical concurrency}, states rarely improve Order, Liberty, and Equality symmetrically. Historical evidence suggests that breaking out of middle-income stagnation often involves a vanguard'' approach—hyper-focusing on a single institutional axis to catalyze growth. For example, the Order-first'' industrialization observed in East Asian developmental states intentionally prioritized state capacity to build the economic base required to eventually support the emergent dimensions of Liberty and broader Equality (Amsden, 1989; Wade, 1990). This pattern suggests that severe imbalance is often a functional, temporary requirement of the developmental trajectory.
-
-\section{Conclusion}
-
-This paper developed an axiomatic framework for the analysis of state architecture, demonstrating that political ideology and institutional design operate as a measurable geometric manifold.
-
-The results suggest a profound paradox in political development: perfect institutional balance in the center of the manifold may represent developmental stagnation. While structural balance is ultimately required to reach the absolute mathematical limits of state capacity, dynamic economic and human development frequently requires a state to purposefully ``unbalance'' itself to break the status quo. Future research should apply longitudinal time-series data to trace the exact geometric trajectories states take as they navigate this manifold over time.
+To understand the future of global governance, political science must move beyond the taxonomy of static regime types. States are complex adaptive systems navigating a perilous mathematical landscape. By mapping the boundaries, voids, and corridors of this space, we can begin to measure not just where a nation currently stands, but the systemic forces dictating where it is inevitably being pulled.
 
 \section*{Data and Code Availability}
-The Python source code, generated figures, and full replication instructions for this analysis are publicly available on GitHub at \url{https://github.com/adibatic/institutional-manifolds}. Due to licensing restrictions, the raw World Values Survey dataset is not hosted in the repository and must be downloaded separately according to the instructions provided in the repository documentation.
+The Python source code, generated figures, and full replication instructions for this analysis are publicly available on GitHub at \url{https://github.com/adibatic/governance-topology}.
 
-\section*{References}
-\begin{description}
-
-    \item Acemoglu, D., \& Robinson, J. (2012). \textit{Why Nations Fail: The Origins of Power, Prosperity, and Poverty}. Crown.
-
-    \item Acemoglu, D., \& Robinson, J. (2019). \textit{The Narrow Corridor: States, Societies, and the Fate of Liberty}. Penguin.
-
-    \item Amsden, A. H. (1989). \textit{Asia's Next Giant: South Korea and Late Industrialization}. Oxford University Press.
-
-    \item Bäck, H., \& Hadenius, A. (2008). Democracy and State Capacity: Exploring a J-shaped Relationship. \textit{Governance}, 21(1), 1–24.
-
-    \item Berlin, I. (1958). \textit{Two Concepts of Liberty}. Oxford University Press.
-
-    \item Bertelsmann Stiftung. (2018). \textit{Transformation Index (BTI) Dataset}.
-
-    \item Bertalanffy, L. (1968). \textit{General System Theory: Foundations, Development, Applications}. George Braziller.
-
-    \item Blind, P. K. (2014). \textit{Policy-Driven Democratization: Geometrical Perspectives on Transparency, Accountability, and Corruption}. Palgrave.
-
-    \item Dahl, R. A. (1971). \textit{Polyarchy: Participation and Opposition}. Yale University Press.
-
-    \item Fukuyama, F. (2011). \textit{The Origins of Political Order: From Prehuman Times to the French Revolution}. Farrar, Straus and Giroux.
-
-    \item Hanson, J. K., \& Sigman, R. (2021). Leviathan's Latent Dimensions: Measuring State Capacity for Comparative Political Research. \textit{Journal of Politics}, 83(4), 1495–1510.
-
-    \item Hobbes, T. (1651). \textit{Leviathan}. Penguin Classics.
-
-    \item Huntington, S. P. (1968). \textit{Political Order in Changing Societies}. Yale University Press.
-
-    \item Liu, W., \& Li, J. (2019). Unbalanced Institutions in Market Transition: How Do They Matter for Firm Strategic Choices and Performance in Emerging Economies? \textit{Management International Review}, 59(5), 675–702.
-
-    \item Luhmann, N. (1995). \textit{Social Systems}. Stanford University Press.
-
-    \item Marshall, T. H. (1950). \textit{Citizenship and Social Class}. Cambridge University Press.
-
-    \item Mehran, G. (2003). The Paradox of Tradition and Modernity in Female Education in the Islamic Republic of Iran. \textit{Comparative Education Review}, 47(3), 269–286.
-
-    \item North, D. (1990). \textit{Institutions, Institutional Change and Economic Performance}. Cambridge University Press.
-
-    \item Rawls, J. (1971). \textit{A Theory of Justice}. Harvard University Press.
-
-    \item Ross, M. L. (2012). \textit{The Oil Curse: How Petroleum Wealth Shapes the Development of Nations}. Princeton University Press.
-
-    \item Rousseeuw, P. J. (1987). Silhouettes: A Graphical Aid to the Interpretation and Validation of Cluster Analysis. \textit{Journal of Computational and Applied Mathematics}, 20, 53–65.
-
-    \item Sen, A. (1999). \textit{Development as Freedom}. Oxford University Press.
-
-    \item Simon, H. (1962). The Architecture of Complexity. \textit{Proceedings of the American Philosophical Society}, 106(6), 467–482.
-
-    \item Transparency International. (2019). \textit{Corruption Perceptions Index Dataset}.
-
-    \item Troyanskaya, O., Cantor, M., Sherlock, G., Brown, P., Hastie, T., Tibshirani, R., Botstein, D., \& Altman, R. B. (2001). Missing Value Estimation Methods for DNA Microarrays. \textit{Bioinformatics}, 17(6), 520–525.
-
-    \item United Nations Development Programme. (2018). \textit{Human Development Index Dataset}.
-
-    \item V-Dem Institute. (2019). \textit{Varieties of Democracy (V-Dem) Dataset}.
-
-    \item Wade, R. (1990). \textit{Governing the Market: Economic Theory and the Role of Government in East Asian Industrialization}. Princeton University Press.
-
-    \item Wooldridge, J. M. (2015). \textit{Introductory Econometrics: A Modern Approach} (6th ed.). Cengage Learning.
-
-    \item World Bank. (2019). \textit{World Development Indicators Dataset}.
-
-    \item World Justice Project. (2019). \textit{Rule of Law Index Dataset}.
-
-    \item World Values Survey Association. (2020). \textit{World Values Survey Wave 7 Dataset}.
-
-\end{description}
+\bibliographystyle{apalike}
+\bibliography{references}
 
 \end{document}
