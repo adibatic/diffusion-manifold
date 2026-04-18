@@ -18,7 +18,7 @@ This project moves beyond discrete regime typologies by modeling state architect
 <br><br>
 
 <div align="center">
-  <img src="figures/fig4_trajectory_typologies.png" alt="Trajectory Archetypes" width="600">
+  <img src="figures/fig4_trajectory_typologies.png" alt="Trajectory Archetypes" width="500">
   <br>
   <i>Figure 2: Representative developmental archetypes (Direct, Meandering, and Erratic) overlaid on the global manifold, illustrating distinct regimes of institutional evolution.</i>
 </div>

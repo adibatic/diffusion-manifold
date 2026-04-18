@@ -207,9 +207,9 @@ marimo/_lsp/
 __marimo__/
 
 
-# ==========================================
-# CUSTOM PROJECT FILES: DATA, LATEX & BACKUPS
-# ==========================================
+# ==================================
+# CUSTOM PROJECT FILES: DATA, LATEX
+# ==================================
 
 # 1. Data Files (Blocks copyrighted/large datasets)
 data/*.csv
@@ -232,10 +232,5 @@ paper/*.vrb
 paper/*-eps-converted-to.pdf
 
 # 3. The Final Manuscript
-paper/*.pdf
-paper/main.pdf
-
-# 4. Project Backups
-backups/
-*.bak
-*~
+# paper/*.pdf
+# paper/main.pdf
